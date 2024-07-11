@@ -111,20 +111,20 @@ private:
 
     vector<vector<vector<string>>> SportsHardFiller = {
         {{"Which club has won the most UEFA Champions League titles?"}, {"Hard"}, {"Real Madrid", "FC Barcelona", "Bayern Munich", "Liverpool"}, {"0"}},
-        {{"Who was the top scorer of the UEFA Champions League in the 2020-2021 season?"}, {"Hard"}, {"Erling Haaland", "Robert Lewandowski", "Lionel Messi", "Kylian Mbappé"}, {"1"}},
+        {{"Who was the top scorer of the UEFA Champions League in the 2020-2021 season?"}, {"Hard"}, {"Erling Haaland", "Robert Lewandowski", "Lionel Messi", "Kylian Mbappe"}, {"1"}},
         {{"In which year did Italy win their most recent FIFA World Cup?"}, {"Hard"}, {"2006", "2010", "2014", "2018"}, {"0"}},
-        {{"Which player has won the FIFA World Cup Golden Boot award twice?"}, {"Hard"}, {"Pelé", "Diego Maradona", "Ronaldo", "Thomas Müller"}, {"2"}},
+        {{"Which player has won the FIFA World Cup Golden Boot award twice?"}, {"Hard"}, {"Pele", "Diego Maradona", "Ronaldo", "Thomas Müller"}, {"2"}},
         {{"Which nation won the FIFA World Cup in 1998?"}, {"Hard"}, {"Brazil", "Argentina", "France", "Germany"}, {"2"}},
-        {{"Who is the all-time top scorer in the history of the UEFA Champions League?"}, {"Hard"}, {"Lionel Messi", "Cristiano Ronaldo", "Raúl", "Karim Benzema"}, {"1"}},
+        {{"Who is the all-time top scorer in the history of the UEFA Champions League?"}, {"Hard"}, {"Lionel Messi", "Cristiano Ronaldo", "Raul", "Karim Benzema"}, {"1"}},
         {{"Which country hosted the FIFA World Cup in 2014?"}, {"Hard"}, {"Brazil", "Germany", "Russia", "South Africa"}, {"0"}},
         {{"Which club won the UEFA Champions League in the 2018-2019 season?"}, {"Hard"}, {"Real Madrid", "Liverpool", "Bayern Munich", "Barcelona"}, {"0"}},
-        {{"Who won the FIFA World Cup Golden Ball in 2010?"}, {"Hard"}, {"Lionel Messi", "Andrés Iniesta", "Thomas Müller", "Diego Forlán"}, {"1"}},
-        {{"Which player scored the 'Hand of God' goal in the 1986 FIFA World Cup?"}, {"Hard"}, {"Lionel Messi", "Diego Maradona", "Pelé", "Zinedine Zidane"}, {"1"}},
+        {{"Who won the FIFA World Cup Golden Ball in 2010?"}, {"Hard"}, {"Lionel Messi", "Andres Iniesta", "Thomas Muller", "Diego Forlan"}, {"1"}},
+        {{"Which player scored the 'Hand of God' goal in the 1986 FIFA World Cup?"}, {"Hard"}, {"Lionel Messi", "Diego Maradona", "Pele", "Zinedine Zidane"}, {"1"}},
         {{"In which year did Germany win their most recent FIFA World Cup?"}, {"Hard"}, {"2006", "2010", "2014", "2018"}, {"2"}},
         {{"Which club won the UEFA Champions League three consecutive times from 2016 to 2018?"}, {"Hard"}, {"Real Madrid", "FC Barcelona", "Bayern Munich", "Liverpool"}, {"0"}},
         {{"Who scored the winning goal for Spain in the 2010 FIFA World Cup final?"}, {"Hard"}, {"Andres Iniesta", "Xavi Hernandez", "David Villa", "Fernando Torres"}, {"0"}},
         {{"Which nation won the FIFA World Cup in 1966?"}, {"Hard"}, {"England", "Brazil", "Germany", "Italy"}, {"0"}},
-        {{"Who holds the record for the most assists in a single UEFA Champions League season?"}, {"Hard"}, {"Lionel Messi", "Neymar", "Kevin De Bruyne", "Angel Di María"}, {"2"}}
+        {{"Who holds the record for the most assists in a single UEFA Champions League season?"}, {"Hard"}, {"Lionel Messi", "Neymar", "Kevin De Bruyne", "Angel Di Maria"}, {"2"}}
     };
 
 

@@ -44,6 +44,8 @@ public:
     void displayPlayerInfo(void) const;             //for displaying the information of the user (current)
 
     friend class BrainQuest;
+    friend void serializePlayer(const Player& player, std::ofstream& ofs);
+    friend void deserializePlayer(Player& player, std::ifstream& ifs);
 };
 
 //implementation of methods of the class

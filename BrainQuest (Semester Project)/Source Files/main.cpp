@@ -1,5 +1,7 @@
 #include "BrainQuest class.cpp"
-#include <fstream>
+
+void serializePlayer(const Player& player, std::ofstream& ofs);
+void deserializePlayer(Player& player, std::ifstream& ifs);
 
 int main(void){
 
@@ -18,7 +20,9 @@ int main(void){
     initializerDummy.initializeRiddleQuestions(RiddleEasy, RiddleMedium, RiddleHard);
 
     Player player; BrainQuest dummy;
+
     dummy.initialize(player); system("cls");
+
     bool mathsRandomPlayed = false, sportsRandomPlayed = false, historyRandomPlayed = false, riddleRandomPlayed = false;
     bool mathsEasyPlayed = false, mathsMediumPlayed = false, mathsHardPlayed = false;
     bool sportsEasyPlayed = false, sportsMediumPlayed = false, sportsHardPlayed = false;
@@ -46,14 +50,13 @@ int main(void){
             sleep(1); system("cls"); dummy.generateIQAnalysis(player); system("cls");
         }
         else if(startingMenuChoice == 9){
-            ofstream file("leaderboard.txt", ios :: app);
-            string name; long long score;
-            name = player.getName(); score = player.getTotalScore();
-            if(file.fail()){
+            ofstream myFile("leaderboard.bin", ios::binary | ios::app);
+            if (myFile.fail()) {
                 exit(1);
             }
-            file << name; file << score; file << "*" << endl;
-            file.close();
+            serializePlayer(player, myFile);        //writing this player object in append mode to the binary file
+            myFile.seekp(0, ios :: end);
+            myFile.close();
             sleep(1);
             dummy.logout(player); system("cls");
             dummy.generateIQAnalysis(player); system("cls");
@@ -67,45 +70,35 @@ int main(void){
             BrainQuest :: displayRules();
         }
         else if(startingMenuChoice == 8){
-            ifstream file("leaderboard.txt", ios :: in);
-            if(file.fail()){
+            vector<Player> players;
+            ifstream myFile("leaderboard.bin", ios::binary);
+            if (!myFile) {
                 exit(1);
             }
-            vector<vector<string>> players; vector<string> temp; string name; string score; char ch;
-            while(file.get(ch)){
-                if((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')){
-                    name.push_back(ch);
-                }
-                else if((int)ch >= 48 && (int)ch <= 57){
-                    score.push_back(ch);
-                }
-                else if(ch == '*'){
-                    temp.push_back(name); temp.push_back(score); players.push_back(temp); temp.clear(); name = ""; score = "";
-                }
-                else{
-                    continue;
-                }
+            while (myFile.peek() != EOF) {
+                Player dummy;
+                deserializePlayer(dummy, myFile);
+                players.push_back(dummy);
             }
+            
             //now we need to sort it based on the scores of the players
             for(size_t pass = 1; pass < players.size(); pass++){
                 for(size_t i = 0; i < players.size() - 1; i++){
-                    long long scoreone = stoll(players[i][1]), scoretwo = stoll(players[i + 1][1]);
-                    if(scoreone < scoretwo){
-                        vector<string> temp = players[i];
-                        players[i] = players[i + 1];
-                        players[i + 1] = temp;
+                    if(players[i].getTotalScore() > players[i + 1].getTotalScore()){
+                        Player temp = players[i]; players[i] = players[i + 1]; players[i + 1] = temp;
                     }
                 }
             }
+
             sleep(1); system("cls"); cout << "\n\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\tLoading Leaderboard..."; sleep(3); system("cls");
             cout << "\n\t\t\t\t\t-------------------LeaderBoard-------------------" << endl << endl;
             int counter = 1;
             for(auto &player : players){
                 cout << "\n\t\t\t\t\t-------------------Rank: " << counter << "-----------------------";
-                cout << "\nUsername: " << player[0] << "\nTotal Score: " << player[1] << endl << endl;
+                cout << "\nUsername: " << player.getName() << "\nTotal Score: " << player.getTotalScore() << endl << endl;
                 counter++;
             }
-            file.close();
+            myFile.close();
             string exit; cout << "\nEnter any key to return to main menu:"; getline(cin >> ws, exit);
         }
         else{
@@ -297,4 +290,54 @@ int main(void){
     }
 
     return 0;
+}
+
+void serializePlayer(const Player& player, std::ofstream& ofs) {
+    size_t nameLength = player.getName().size();
+    ofs.write(reinterpret_cast<const char*>(&nameLength), sizeof(nameLength));
+    ofs.write(player.getName().c_str(), nameLength);
+
+    size_t passwordLength = player.getPassword().size();
+    ofs.write(reinterpret_cast<const char*>(&passwordLength), sizeof(passwordLength));
+    ofs.write(player.getPassword().c_str(), passwordLength);
+
+    ofs.write(reinterpret_cast<const char*>(&player.totalScore), sizeof(player.totalScore));
+    ofs.write(reinterpret_cast<const char*>(&player.mathsScore), sizeof(player.mathsScore));
+    ofs.write(reinterpret_cast<const char*>(&player.historyScore), sizeof(player.historyScore));
+    ofs.write(reinterpret_cast<const char*>(&player.sportsScore), sizeof(player.sportsScore));
+    ofs.write(reinterpret_cast<const char*>(&player.riddleScore), sizeof(player.riddleScore));
+
+    ofs.write(reinterpret_cast<const char*>(&player.totalQuesCorrect), sizeof(player.totalQuesCorrect));
+    ofs.write(reinterpret_cast<const char*>(&player.mathsQuesCorrect), sizeof(player.mathsQuesCorrect));
+    ofs.write(reinterpret_cast<const char*>(&player.historyQuesCorrect), sizeof(player.historyQuesCorrect));
+    ofs.write(reinterpret_cast<const char*>(&player.sportsQuesCorrect), sizeof(player.sportsQuesCorrect));
+    ofs.write(reinterpret_cast<const char*>(&player.riddleQuesCorrect), sizeof(player.riddleQuesCorrect));
+
+    ofs.write(reinterpret_cast<const char*>(&player.lifelines), sizeof(player.lifelines));
+}
+
+void deserializePlayer(Player& player, std::ifstream& ifs) {
+    size_t nameLength;
+    ifs.read(reinterpret_cast<char*>(&nameLength), sizeof(nameLength));
+    player.name.resize(nameLength);
+    ifs.read(&player.name[0], nameLength);
+
+    size_t passwordLength;
+    ifs.read(reinterpret_cast<char*>(&passwordLength), sizeof(passwordLength));
+    player.password.resize(passwordLength);
+    ifs.read(&player.password[0], passwordLength);
+
+    ifs.read(reinterpret_cast<char*>(&player.totalScore), sizeof(player.totalScore));
+    ifs.read(reinterpret_cast<char*>(&player.mathsScore), sizeof(player.mathsScore));
+    ifs.read(reinterpret_cast<char*>(&player.historyScore), sizeof(player.historyScore));
+    ifs.read(reinterpret_cast<char*>(&player.sportsScore), sizeof(player.sportsScore));
+    ifs.read(reinterpret_cast<char*>(&player.riddleScore), sizeof(player.riddleScore));
+
+    ifs.read(reinterpret_cast<char*>(&player.totalQuesCorrect), sizeof(player.totalQuesCorrect));
+    ifs.read(reinterpret_cast<char*>(&player.mathsQuesCorrect), sizeof(player.mathsQuesCorrect));
+    ifs.read(reinterpret_cast<char*>(&player.historyQuesCorrect), sizeof(player.historyQuesCorrect));
+    ifs.read(reinterpret_cast<char*>(&player.sportsQuesCorrect), sizeof(player.sportsQuesCorrect));
+    ifs.read(reinterpret_cast<char*>(&player.riddleQuesCorrect), sizeof(player.riddleQuesCorrect));
+
+    ifs.read(reinterpret_cast<char*>(&player.lifelines), sizeof(player.lifelines));
 }
