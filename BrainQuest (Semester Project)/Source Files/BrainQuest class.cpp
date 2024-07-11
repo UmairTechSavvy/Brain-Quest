@@ -1,5 +1,6 @@
 #include "PlayerClass.cpp"
 #include "QuestionInitializerClassImplementation.cpp"
+#include <fstream>
 
 class BrainQuest{
 public:
@@ -31,6 +32,26 @@ void BrainQuest :: initialize(Player &user){
     }
     user.name = Name; user.password = Password;
     cout << "\nYour credentials have successfully been initialized, " << user.name << "!" << endl; sleep(2);
+    //now we check to see if the user that has been initialized, already exists in the leaderboard database
+    vector<Player> players;
+    ifstream myFile("leaderboard.bin", ios::binary);
+    if (!myFile) {
+        exit(1);
+    }
+    while (myFile.peek() != EOF) {
+        Player dummy;
+        deserializePlayer(dummy, myFile);
+        players.push_back(dummy);
+    }
+    bool flag = false;
+    for(auto &player : players){
+        if(player.getName() == user.name && player.getPassword() == user.password){
+            user = player; flag = true; break;
+        }
+    }
+    if(flag){
+        system("cls"); cout << "\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\tWelcome Back, " << user.getName() << "!"; sleep(3);
+    }
 }
 
 void BrainQuest :: logout(Player user) const{
@@ -80,12 +101,12 @@ void BrainQuest :: displayRules(void){
 }
 
 void BrainQuest :: generateIQAnalysis(Player user) const{
-    float mathsIQ = (user.mathsScore / 10000.0) * 100.0;
-    float sportsIQ = (user.sportsScore / 10000.0) * 100.0;
-    float historyIQ = (user.historyScore / 10000.0) * 100.0;
-    float riddleIQ = (user.riddleScore / 10000.0) * 100.0;
+    float mathsIQ = (user.mathsScore / 10000.0 * 100.0); mathsIQ = max((int)mathsIQ, 40);
+    float sportsIQ = (user.sportsScore / 10000.0) * 100.0; sportsIQ = max((int)sportsIQ, 40);
+    float historyIQ = (user.historyScore / 10000.0) * 100.0; historyIQ = max((int)historyIQ, 40);
+    float riddleIQ = (user.riddleScore / 10000.0) * 100.0; riddleIQ = max((int)riddleIQ, 40);
 
-    float totalIQ = ((mathsIQ + sportsIQ + historyIQ + riddleIQ) / 4.0);
+    float totalIQ = ((mathsIQ + sportsIQ + historyIQ + riddleIQ) / 4.0); totalIQ = max((int)totalIQ, 40);
 
     cout << "\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\tGenerating IQ Analysis...";
     sleep(3);
